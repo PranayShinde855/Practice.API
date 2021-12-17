@@ -1,5 +1,5 @@
-﻿using API.Database.IRepository;
-using API.Model;
+﻿using API.Model;
+using API.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -9,37 +9,49 @@ using System.Threading.Tasks;
 
 namespace Practice.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class ProductController : ControllerBase
     {
-        private IProductRepository _productRepository;
+        private readonly IProductServices _productServices;
 
-
-        public ProductController(IProductRepository productRepository)
+        public ProductController(IProductServices productServices)
         {
-            _productRepository = productRepository; 
+            _productServices = productServices;
         }
 
-        [Route("GetProducts")]
         [HttpGet]
-        public async Task<IEnumerable<Product>> GetProducts()
+        [Route("GetAllProducts")]
+        [Produces(typeof(IEnumerable<Product>))]
+        public async Task<IActionResult> GetAllProduct ()
         {
-            return await _productRepository.GetProducts();
+            IEnumerable<Product> _product = (IEnumerable<Product>)await _productServices.GetAllProducts();
+            return Ok(_product);
         }
 
-        [Route("AddProduct")]
         [HttpPost]
-        public async Task<Product> AddProduct (Product product)
+        [Route("AddProducts")]
+        [Produces(typeof(Product))]
+        public IActionResult AddProduct(Product product)
         {
-            return await _productRepository.AddProduct(product);
+            Product _product = _productServices.AddProduct(product);
+            return Ok(_product);
         }
 
-        [Route("GetProduct/{Id}")]
-        [HttpGet]
-        public async Task GetId(int Id)
+        [HttpPut]
+        [Route("UpdateProduct")]
+        [Produces(typeof(Product))]
+        public async Task<IActionResult> UpdateStudent(Product product)
         {
-          await _productRepository.GetId(Id);
+            Product _product = await _productServices.UpdateProduct(product);
+            return Ok(_product);
+        }
+
+        [HttpDelete]
+        [Route("Delete/{id}")]
+        [Produces(typeof(bool))]
+        public async Task<IActionResult> DeleteStudent(int id)
+        {
+            bool isDeleted = await _productServices.DeleteProduct(id);
+            return Ok(isDeleted);
         }
     }
 }

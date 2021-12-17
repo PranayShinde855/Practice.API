@@ -16,5 +16,7 @@ namespace API.Database
         }
 
         public DbSet<Product> products { get; set; }
+
+        public DbSet<Category> categories { get; set; }
     }
 }
