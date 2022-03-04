@@ -19,7 +19,7 @@ namespace API.Services
         Task<Product> GetProductById(int Id);
 
         Task<bool> DeleteProduct(int Id);
-
+        
         Task<Product> UpdateProduct(Product product);
     }
 
@@ -34,8 +34,12 @@ namespace API.Services
 
         public Product AddProduct(Product product)
         {
-            _productRepository.Add(product);
-            return product;
+            Product pt = new Product();
+            pt.ProductName = product.ProductName;
+            pt.CreatedBy = product.CreatedBy;
+            pt.CreatedDate = product.CreatedDate;
+            _productRepository.Add(pt);
+            return pt;
         }
 
         public async Task<bool> DeleteProduct(int Id)
@@ -59,26 +63,17 @@ namespace API.Services
             return await _productRepository.GetById(Id);
         }
 
-        public async Task<Product> UpdateProduct(int Id)
-        {
-            var getId = await _productRepository.GetById(Id);
-            if (getId != null)
-            {
-                _productRepository.Update(getId);
-                return getId;
-            }
-            return getId;
-        }
-
         public async Task<Product> UpdateProduct(Product product)
         {
-            var getId = await _productRepository.GetById(product.Id);
-            if (getId != null)
+            var checkId = await _productRepository.GetById(product.Id);
+            if (checkId != null)
             {
-                _productRepository.Update(getId);
-                return getId;
+                checkId.ProductName = product.ProductName;
+                checkId.ModifiedDate = DateTime.Now;
+                _productRepository.Update(checkId);
+                return checkId;
             }
-            return getId;
+            return product;
         }
     }
 }

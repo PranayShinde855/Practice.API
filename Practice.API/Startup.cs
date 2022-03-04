@@ -28,8 +28,10 @@ namespace Practice.API
             Options.UseSqlServer(Configuration.GetConnectionString("Connection")));
 
             services.AddScoped<IProductRepository, ProductRepository>()
-               .AddScoped<IProductServices, ProductServices>()
-               ;
+               .AddScoped<IProductServices, ProductServices>();
+
+            services.AddScoped<ICategoryRepository, CategoryRepository>()
+               .AddScoped<ICategoryServices, CategoryServices>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

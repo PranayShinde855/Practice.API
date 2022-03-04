@@ -36,13 +36,13 @@ namespace Practice.API.Controllers
             return Ok(_product);
         }
 
-        [HttpPut]
-        [Route("UpdateProduct")]
+        [HttpPut()]
+        [Route("UpdateProduct/{Id}")]
         [Produces(typeof(Product))]
-        public async Task<IActionResult> UpdateStudent(Product product)
+        public async Task<IActionResult> UpdateProduct(Product product)
         {
-            Product _product = await _productServices.UpdateProduct(product);
-            return Ok(_product);
+            Product product1 = await _productServices.UpdateProduct(product);
+            return Ok(product1);
         }
 
         [HttpDelete]
